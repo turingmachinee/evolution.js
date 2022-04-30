@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 export default class Utils {
     static randomNumber(min, max) {
         return Math.random() * (max - min) + min;
@@ -8,18 +10,18 @@ export default class Utils {
     }
 
     static getWidth(mesh) {
-        let boundingBox = mesh.geometry.boundingBox;
+        let boundingBox = new THREE.Box3().setFromObject(mesh);
         return boundingBox.max.x - boundingBox.min.x;
     }
 
     static getHeight(mesh) {
-        let boundingBox = mesh.geometry.boundingBox;
-        return boundingBox.max.z - boundingBox.min.z;
+        let boundingBox = new THREE.Box3().setFromObject(mesh);
+        return boundingBox.max.y - boundingBox.min.y;
     }
 
     static getDepth(mesh) {
-        let boundingBox = mesh.geometry.boundingBox;
-        return boundingBox.max.y - boundingBox.min.y;
+        let boundingBox = new THREE.Box3().setFromObject(mesh);
+        return boundingBox.max.z - boundingBox.min.z;
     }
 
     static getRadians(degrees) {
