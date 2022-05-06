@@ -4,18 +4,18 @@ import Utils from "./utils"
 
 export default class Animal {
     constructor(worldMesh) {
-        let speed_x = Utils.randomNumber(1, 100);
-        let speed_y = Utils.randomNumber(1, 100);
-        let strength = Utils.randomNumber(1, 100);
-        let swim = Utils.randomNumber(1, 100);
-        let max_uv_exposure = Utils.randomNumber(1, 100);
+        this.speed_x = Utils.randomNumber(0.1, 0.2);
+        this.speed_y = Utils.randomNumber(0.1, 0.2);
+        this.strength = Utils.randomNumber(1, 100);
+        this.swim = Utils.randomNumber(1, 100);
+        this.max_uv_exposure = Utils.randomNumber(1, 100);
         let size_x = Utils.randomNumber(1, 4);
         let size_y = Utils.randomNumber(1, 4);
         let geometry = new THREE.BoxGeometry(size_x, size_y, size_x);
         let material = new THREE.MeshBasicMaterial({ color: "#f6f6f6" });
         this.mesh = new THREE.Mesh(geometry, material);
         let x = Utils.randomNumber(-Utils.getWidth(worldMesh)/2, Utils.getWidth(worldMesh)/2)
-        let y = Utils.getHeight(this.mesh)/2
+        let y = Utils.getHeight(this.mesh)/2 + Utils.getHeight(worldMesh)/2;
         let z = Utils.randomNumber(-Utils.getDepth(worldMesh)/2, Utils.getDepth(worldMesh)/2)
         this.mesh.position.set(x, y, z)
     }

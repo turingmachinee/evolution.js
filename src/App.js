@@ -4,10 +4,11 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import Stats from "three/examples/jsm/libs/stats.module";
 import * as Environment from "./environment"
 import Animal from "./animal"
+import Utils from "./utils"
 
 function App() {
   return (
-    <div />
+      <div />
   );
 }
 
@@ -36,12 +37,12 @@ var material = new THREE.MeshBasicMaterial({ color: "#6d6363" });
 var ground = new THREE.Mesh(geometry, material);
 scene.add(ground);
 
-let animal1 = new Animal(ground)
-scene.add(animal1.mesh);
+let animals = [];
 
-for (let i = 0; i<10; i++) {
-  let animal1 = new Animal(ground)
-  scene.add(animal1.mesh);
+for (let i = 0; i < 10; i++) {
+  let animal = new Animal(ground);
+  animals.push(animal);
+  scene.add(animal.mesh);
 }
 
 camera.position.x = 25;
@@ -50,12 +51,56 @@ camera.position.z = 40;
 
 controls.update();
 var animate = function () {
-  requestAnimationFrame(animate);
   controls.update();
   stats.update();
+
+  // Move animals
+  for (let i = 0; i < animals.length; i++) {
+    moveAnimal(animals[i]);
+  }
+
+  // Handle animal collisions
+  for (let i = 0; i < animals.length; i++) {
+    for (let j = 0; j < animals.length; j++) {
+      if (animals[i] == animals[j]) {
+        // Same animal
+        continue;
+      }
+
+      if (detectCollision(animals[i].mesh, animals[j].mesh)) {
+        // Need to add logic to check animal size and "kill" the smaller animal
+        animals[i].mesh.geometry.dispose();
+        animals[j].mesh.geometry.dispose();
+        scene.remove(animals[i].mesh);
+        scene.remove(animals[j].mesh);
+      }
+    }
+  }
+
   renderer.render(scene, camera);
+  requestAnimationFrame(animate);
 };
 animate();
+
+function moveAnimal(animal) {
+  let movementDirection = Utils.randomInteger(0, 3);
+  let animalSpeed = animal.speed_x;
+
+  switch (movementDirection) {
+    case 0:
+      animal.mesh.translateX(-animalSpeed);
+      break;
+    case 1:
+      animal.mesh.translateX(animalSpeed);
+      break;
+    case 2:
+      animal.mesh.translateZ(-animalSpeed);
+      break;
+    case 3:
+      animal.mesh.translateZ(animalSpeed);
+      break;
+  }
+}
 
 // Returns true if object1 and object2 intersect
 function detectCollision(object1, object2) {
